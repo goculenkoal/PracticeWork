@@ -5,6 +5,6 @@ from Unit2.ParseWebSite.parser import collect_links
 if __name__ == '__main__':
     init_db_parce()
     links = collect_links()
-    for link in links:
-        data_from_page = parser_xls(link)
+    for link, date in links:
+        data_from_page = parser_xls(link, date)
         insert_data(data_from_page)

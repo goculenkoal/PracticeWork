@@ -1,7 +1,9 @@
 import pandas
+from pandas import DataFrame
 
 
-def filter_excel_by_pandas(link: str):
+def __filter_excel_by_pandas(link: str) -> DataFrame:
+    """Чистка экселя, фильтрация данных"""
     df = pandas.read_excel(link, usecols='B:F,O')
     #
     find_row_index = df[df.iloc[:, 0] == 'Единица измерения: Метрическая тонна'].index[0]
@@ -15,15 +17,14 @@ def filter_excel_by_pandas(link: str):
     df = df.dropna(subset=[column_contract_count])
     df = df[df[column_contract_count] > 0]
 
-    return df.head(10)
+    return df
 
 
-def parser_xls(link: str) -> list[tuple]:
+def parser_xls(link: str, date: str) -> list[tuple]:
     """Парсит страницу, доставая из нее необходимые данные"""
 
     total_data_from_page = []
-
-    df = filter_excel_by_pandas(link)
+    df = __filter_excel_by_pandas(link)
 
     for row in df.itertuples(index=True, name='Pandas'):
         try:
@@ -44,6 +45,7 @@ def parser_xls(link: str) -> list[tuple]:
                     volume,
                     total,
                     count,
+                    date,
                 )
             )
 

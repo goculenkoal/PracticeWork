@@ -1,10 +1,10 @@
-
+from datetime import datetime
 
 from Unit2.ParseWebSite.database import engine, session
 from Unit2.ParseWebSite.models import Base, SpimexTradingResults
 
 
-def init_db_parce():
+def init_db_parce() -> None:
     """Создание структуры БД"""
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
@@ -26,6 +26,7 @@ def insert_data(data_list: list[tuple]) -> None:
                 volume=data[6],
                 total=data[7],
                 count=data[8],
+                date=datetime.strptime(data[9], "%d.%m.%Y"),
 
             )
             s.add(data_obj)
