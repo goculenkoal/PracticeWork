@@ -1,10 +1,10 @@
-from datetime import datetime, timezone
-from sqlalchemy import DateTime
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from datetime import datetime
+from sqlalchemy import DateTime, TIMESTAMP, func
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.ext.declarative import declarative_base
 
 
-class Base(DeclarativeBase):
-    pass
+Base = declarative_base()
 
 
 class SpimexTradingResults(Base):
@@ -21,12 +21,12 @@ class SpimexTradingResults(Base):
     total: Mapped[int]
     count: Mapped[int]
     date: Mapped[datetime] = mapped_column(DateTime())
-    created_on: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.now(timezone.utc)
+    created_on: Mapped[TIMESTAMP] = mapped_column(
+        TIMESTAMP,
+        default=func.now(timezone=True)
     )
-    updated_on: Mapped[datetime] = mapped_column(
-        DateTime,
-        default=datetime.now(timezone.utc),
-        onupdate=datetime.now(timezone.utc)
+    updated_on: Mapped[TIMESTAMP] = mapped_column(
+        TIMESTAMP,
+        default=func.now(timezone=True),
+        onupdate=func.now(timezone=True)
     )

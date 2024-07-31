@@ -1,22 +1,21 @@
 from datetime import datetime
-
-
-# from unit2.async_parse_web_site.models import Base, SpimexTradingResults
-from unit4.async_parse_web_site.db import engine, session
+from unit4.async_parse_web_site.db import async_engine, async_session
 from unit4.async_parse_web_site.models import Base, SpimexTradingResults
 
 
-def init_db_parce() -> None:
+async def init_db_parce() -> None:
     """Создание структуры БД"""
     msg = "----DB is ready----"
-    Base.metadata.drop_all(bind=engine)
-    Base.metadata.create_all(bind=engine)
+    async with async_engine.begin() as conn:
+        await conn.run_sync(Base.metadata.drop_all)
+        await conn.run_sync(Base.metadata.create_all)
     print(msg)
 
 
-def insert_data(data_list: list[tuple]) -> None:
+async def insert_data(data_list: list[tuple]) -> None:
     """Добавление данных"""
-    with session() as s:
+
+    async with async_session() as s:
         for data in data_list:
 
             data_obj = SpimexTradingResults(
@@ -33,4 +32,4 @@ def insert_data(data_list: list[tuple]) -> None:
 
             )
             s.add(data_obj)
-        s.commit()
+        await s.commit()
